@@ -16,20 +16,19 @@ using Google.Apis.Services;
 using Google.Apis.Util.Store;
 
 
-namespace GoogleSheetsIntegration
-{
-    
+namespace Beardiegames.GoogleSheetsIntegration
+{   
     public class Sheet
     {
+        // properties
         string spreadsheetId;
         SpreadsheetsResource resource;
 
-        public string Id
-        {
-            get {
-                return spreadsheetId;
-            }
-        }
+        //  Class Information
+        public string Id { get { return spreadsheetId; }}
+        public SpreadsheetsResource lookupResource {get{return resource;}}
+
+        // Public interface
 
         public Sheet(SpreadsheetsResource resource, string spreadsheetId)
         {
@@ -44,18 +43,17 @@ namespace GoogleSheetsIntegration
             return response.Values;
         }
 
-        public IList<IList<Object>> WriteValues(string range)
+        public IList<IList<Object>> WriteValues(string range, IList<IList<Object>> values)
         {
             ValueRange valueRange = new ValueRange();
-            valueRange.MajorDimension = "COLUMNS";//"ROWS";//COLUMNS
-
-            var oblist = new List<object>() { "My Cell Text" };
-            valueRange.Values = new List<IList<object>> { oblist };
+            valueRange.MajorDimension = "ROWS";//"ROWS";//COLUMNS
+            valueRange.Values = values;
 
             SpreadsheetsResource.ValuesResource.UpdateRequest request = resource.Values.Update(valueRange, Id, range);
             request.ValueInputOption = SpreadsheetsResource.ValuesResource.UpdateRequest.ValueInputOptionEnum.RAW;
             request.IncludeValuesInResponse = true;
             UpdateValuesResponse response = request.Execute();
+
             return response.UpdatedData.Values;
         }
     }

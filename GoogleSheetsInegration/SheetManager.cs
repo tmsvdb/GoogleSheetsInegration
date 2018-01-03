@@ -16,17 +16,25 @@ using Google.Apis.Services;
 using Google.Apis.Util.Store;
 
 
-namespace GoogleSheetsIntegration
+namespace Beardiegames.GoogleSheetsIntegration
 {
     public class SheetManager
     {
+        // Properties
         List<Sheet> sheets;
         SheetService runningService;
+
+        // Class Information
+        public int numberOfSheets { get { return sheets.Count; } }
+        public bool isRunning { get { return runningService != null; } }
+
+        // Public methodes
 
         public SheetManager(string cliend_id_location, string application_name)
         {
             runningService = new SheetService();
             runningService.Run(cliend_id_location, application_name);
+            sheets = new List<Sheet>();
         }
 
         public Sheet GetSheet(string spreadsheetId)
@@ -40,6 +48,8 @@ namespace GoogleSheetsIntegration
 
             return sheet;
         }
+
+        // Local implementation
 
         private Sheet Lookup(string spreadsheetId)
         {

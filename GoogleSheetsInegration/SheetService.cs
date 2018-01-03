@@ -16,14 +16,20 @@ using Google.Apis.Services;
 using Google.Apis.Util.Store;
 
 
-namespace GoogleSheetsIntegration
+namespace Beardiegames.GoogleSheetsIntegration
 {
     public class SheetService
     {
+        // Properties
         static string[] Scopes = { SheetsService.Scope.Spreadsheets };
-
         UserCredential credential;
         SheetsService service;
+
+        // Class information
+        public UserCredential peekCredential { get { return credential; } }
+        public SheetsService peekRunningService { get { return service; } }
+
+        // public methodes
 
         public void Run(string cliend_id_location, string application_name)
         {
@@ -42,7 +48,7 @@ namespace GoogleSheetsIntegration
         {
             UserCredential credential;
 
-            using (var stream = new FileStream("client_id.json", FileMode.Open, FileAccess.Read))
+            using (var stream = new FileStream(cliend_id_location, FileMode.Open, FileAccess.Read))
             {
                 string credPath = System.Environment.GetFolderPath(
                     System.Environment.SpecialFolder.Personal);
