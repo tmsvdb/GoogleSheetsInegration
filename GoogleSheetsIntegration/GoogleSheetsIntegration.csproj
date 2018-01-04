@@ -4,7 +4,7 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{C3199821-727E-4293-9D1E-D4678D6BCF19}</ProjectGuid>
+    <ProjectGuid>{68273DD9-27A7-4E17-8A5B-6E7249286B5F}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>GoogleSheetsIntegration</RootNamespace>

@@ -6,24 +6,27 @@ using System.Threading.Tasks;
 
 namespace Beardiegames.GoogleSheetsIntegration
 {
-    // types
     public class Cell
     {
         // properties
-        public CellID id;
-        public string value;
+        CellID id;
+        string val;
+
+        // Cell information
+        public CellID Id { get { return id; } }
+        public string Value { get { return val; } set { val = value; } }
 
         // public class methodes
 
         public Cell(CellID id, string value)
         {
             this.id = id;
-            this.value = value;
+            this.val = value;
         }
 
         public bool Compare(int row, int col)
         {
-            return (id.colNumber == col && id.rowNumber == row);
+            return (id.colIndex == col && id.rowIndex == row);
         }
         public bool Compare(string idString)
         {
@@ -31,11 +34,32 @@ namespace Beardiegames.GoogleSheetsIntegration
         }
         public bool CompareColumn(int col)
         {
-            return id.colNumber == col;
+            return id.colIndex == col;
         }
         public bool CompareRow(int row)
         {
-            return id.rowNumber == row;
+            return id.rowIndex == row;
+        }
+
+        public void MoveUp()
+        {
+            Console.WriteLine("Move cell UP from " + id.ToStringFormat() + " to " + new CellID(id.rowIndex - 1, id.colIndex).ToStringFormat());
+            id = new CellID(id.rowIndex - 1, id.colIndex);
+        }
+        public void MoveDown()
+        {
+            Console.WriteLine("Move cell DOWN from " + id.ToStringFormat() + " to " + new CellID(id.rowIndex + 1, id.colIndex).ToStringFormat());
+            id = new CellID(id.rowIndex + 1, id.colIndex);
+        }
+        public void MoveLeft()
+        {
+            Console.WriteLine("Move cell LEFT from " + id.ToStringFormat() + " to " + new CellID(id.rowIndex, id.colIndex - 1).ToStringFormat());
+            id = new CellID(id.rowIndex, id.colIndex - 1);
+        }
+        public void MoveRight()
+        {
+            Console.WriteLine("Move cell RIGHT from " + id.ToStringFormat() + " to " + new CellID(id.rowIndex, id.colIndex + 1).ToStringFormat());
+            id = new CellID(id.rowIndex, id.colIndex + 1);
         }
     }
 
@@ -46,8 +70,8 @@ namespace Beardiegames.GoogleSheetsIntegration
         int col;
 
         // class information
-        public int rowNumber { get { return row; } }
-        public int colNumber { get { return col; } }
+        public int rowIndex { get { return row; } }
+        public int colIndex { get { return col; } }
 
         // public class methodes
 
@@ -59,9 +83,8 @@ namespace Beardiegames.GoogleSheetsIntegration
 
         public string ToStringFormat()
         {
-            return NumberToColumn(col) + row.ToString();
+            return NumberToColumn(col+1) + (row+1).ToString();
         }
-
 
         // Static Class Features
 
@@ -101,16 +124,14 @@ namespace Beardiegames.GoogleSheetsIntegration
         {
             string output = "";
 
-            while (number != 0)
+            while (number > -1)
             {
-                int temp = number % 26;
+                int temp = (number-1) % 26;
 
-                output += Convert.ToChar(temp + 64);
+                output = Convert.ToChar(temp + 65) + output;
 
-                if (number > 26)
-                    number = number / 26;
-                else
-                    break;
+                if (number > 26) number = ((number-1) / 26);
+                else break;
             }
 
             return output;
@@ -125,6 +146,8 @@ namespace Beardiegames.GoogleSheetsIntegration
 
         // public class info
         public int numberOfCells { get { return cells.Count; } }
+        public int peekWidth { get { return width; } }
+        public int peekHeight { get { return height; } }
 
         // Public Methodes
 
@@ -137,14 +160,14 @@ namespace Beardiegames.GoogleSheetsIntegration
 
             for (int row = 0; row < height; row++)
                 for (int col = 0; col < width; col++)
-                    cells.Add(new Cell(new CellID(row, col), ""));
+                    AddCell(row, col, "");
         }
 
         public string GetValue (int row, int col)
         {
             foreach (Cell cell in cells)
                 if (cell.Compare(row, col))
-                    return cell.value;
+                    return cell.Value;
 
             return null;
         }
@@ -152,7 +175,7 @@ namespace Beardiegames.GoogleSheetsIntegration
         {
             foreach (Cell cell in cells)
                 if (cell.Compare(idString))
-                    return cell.value;
+                    return cell.Value;
 
             return null;
         }
@@ -161,13 +184,19 @@ namespace Beardiegames.GoogleSheetsIntegration
         {
             foreach (Cell cell in cells)
                 if (cell.Compare(row, col))
-                    cell.value = value;
+                {
+                    cell.Value = value;
+                    return;
+                }
         }
         public void SetValue(string idString, string value)
         {
             foreach (Cell cell in cells)
                 if (cell.Compare(idString))
-                    cell.value = value;
+                {
+                    cell.Value = value;
+                    return;
+                }
         }
 
         public void AddRow ()
@@ -184,6 +213,16 @@ namespace Beardiegames.GoogleSheetsIntegration
                 cells.Add(new Cell(new CellID(row, width-1), ""));
         }
 
+        public void InsertRowAt(int row)
+        {
+            MoveRowsDown(row);
+        }
+
+        public void InsertColumnAt(int col)
+        {
+            MoveColsRight(col);
+        }
+
         public void RemoveLastRow()
         {
             RemoveRowAt(height-1);
@@ -191,8 +230,7 @@ namespace Beardiegames.GoogleSheetsIntegration
 
         public void RemoveRowAt(int row)
         {
-            foreach(Cell cell in GetRow(row))
-                cells.Remove(cell);
+            MoveRowsUp(row+1);
         }
 
         public void RemoveLastColumn()
@@ -202,8 +240,7 @@ namespace Beardiegames.GoogleSheetsIntegration
 
         public void RemoveColumnAt(int col)
         {
-            foreach (Cell cell in GetColumn(col))
-                cells.Remove(cell);
+            MoveColsLeft(col+1);
         }
 
         public List<Cell> GetRow (int row)
@@ -238,6 +275,80 @@ namespace Beardiegames.GoogleSheetsIntegration
         public static IList<IList<object>> ToObjectList()
         {
             return null;
+        }
+
+        // Private implementation
+
+        private void AddCell (int row, int col, string value)
+        {
+            cells.Add(new Cell(new CellID(row, col), value));
+        }
+
+        private void MoveRowsUp (int fromRow)
+        {
+            // remove overwritten rows
+            if (fromRow > 0)
+                foreach (Cell cell in GetRow(fromRow - 1))
+                    cells.Remove(cell);
+
+            // or incase of all rows selected, remove the first row
+            else
+                foreach (Cell cell in GetRow(0))
+                    cells.Remove(cell);
+
+            // move rows up
+            for (int row = fromRow; row < height; row++)
+                foreach (Cell cell in GetRow(row))
+                    cell.MoveUp();
+
+            height--;
+        }
+
+        private void MoveRowsDown(int fromRow)
+        {
+            // move rows down
+            for (int row = fromRow; row < height; row++)
+                foreach (Cell cell in GetRow(row))
+                    cell.MoveDown();
+
+            height++;
+
+            // add a new row at the selected start row
+            for (int col = 0; col < width; col++)
+                AddCell(fromRow, col, "");
+        }
+
+        private void MoveColsLeft(int fromCol)
+        {
+            // remove overwritten cols
+            if (fromCol > 0)
+                foreach (Cell cell in GetColumn(fromCol - 1))
+                    cells.Remove(cell);
+            // or incase of all cols selected, remove the first col
+            else
+                foreach (Cell cell in GetColumn(0))
+                    cells.Remove(cell);
+
+            // move cols left
+            for (int col = fromCol; col < width; col++)
+                foreach (Cell cell in GetColumn(col))
+                    cell.MoveLeft();
+
+            width--;
+        }
+
+        private void MoveColsRight(int fromCol)
+        {
+            // move cols right
+            for (int col = fromCol; col < width; col++)
+                foreach (Cell cell in GetColumn(col))
+                    cell.MoveRight();
+
+            width++;
+
+            // add a new col at the selected start col
+            for (int row = 0; row < height; row++)
+                AddCell(row, fromCol, "");
         }
     }
 }

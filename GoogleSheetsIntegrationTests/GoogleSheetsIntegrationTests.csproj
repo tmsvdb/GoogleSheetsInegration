@@ -3,7 +3,7 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{FA1C0CEB-55F8-4876-AFE6-00F14859E35B}</ProjectGuid>
+    <ProjectGuid>{11FF76B9-0233-46CC-BE3E-BF15BF78AA4F}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>GoogleSheetsIntegrationTests</RootNamespace>
@@ -99,21 +99,24 @@
     </Otherwise>
   </Choose>
   <ItemGroup>
+    <Compile Include="CellIDTests.cs" />
+    <Compile Include="CellTests.cs" />
     <Compile Include="Google\Apis\Sheets\v4\IClientService.cs" />
+    <Compile Include="MatrixTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="SheetManagerTests.cs" />
     <Compile Include="SheetServiceTests.cs" />
     <Compile Include="SheetTests.cs" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\GoogleSheetsInegration\GoogleSheetsInegration.csproj">
-      <Project>{C3199821-727E-4293-9D1E-D4678D6BCF19}</Project>
-      <Name>GoogleSheetsInegration</Name>
-    </ProjectReference>
-  </ItemGroup>
-  <ItemGroup>
     <None Include="app.config" />
     <None Include="packages.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\GoogleSheetsIntegration\GoogleSheetsIntegration.csproj">
+      <Project>{68273dd9-27a7-4e17-8a5b-6e7249286b5f}</Project>
+      <Name>GoogleSheetsIntegration</Name>
+    </ProjectReference>
   </ItemGroup>
   <Choose>
     <When Condition="'$(VisualStudioVersion)' == '10.0' And '$(IsCodedUITest)' == 'True'">
