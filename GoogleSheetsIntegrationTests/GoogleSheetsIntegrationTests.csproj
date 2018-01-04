@@ -6,8 +6,8 @@
     <ProjectGuid>{FA1C0CEB-55F8-4876-AFE6-00F14859E35B}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>GoogleSheetsInegrationTests</RootNamespace>
-    <AssemblyName>GoogleSheetsInegrationTests</AssemblyName>
+    <RootNamespace>GoogleSheetsIntegrationTests</RootNamespace>
+    <AssemblyName>GoogleSheetsIntegrationTests</AssemblyName>
     <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <ProjectTypeGuids>{3AC096D0-A1C2-E12C-1390-A8335801FDAB};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>

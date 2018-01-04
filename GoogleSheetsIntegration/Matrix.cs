@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Beardiegames.GoogleSheetsInegration
+namespace Beardiegames.GoogleSheetsIntegration
 {
     // types
     public class Cell
@@ -28,6 +28,14 @@ namespace Beardiegames.GoogleSheetsInegration
         public bool Compare(string idString)
         {
             return (id.ToStringFormat() == idString);
+        }
+        public bool CompareColumn(int col)
+        {
+            return id.colNumber == col;
+        }
+        public bool CompareRow(int row)
+        {
+            return id.rowNumber == row;
         }
     }
 
@@ -176,22 +184,48 @@ namespace Beardiegames.GoogleSheetsInegration
                 cells.Add(new Cell(new CellID(row, width-1), ""));
         }
 
-        public void RemoveRow()
+        public void RemoveLastRow()
         {
-            // TODO: Remove last row
-        }
-        public void RemoveRow(int row)
-        {
-            // TODO: Remove row at index
+            RemoveRowAt(height-1);
         }
 
-        public void RemoveColumn()
+        public void RemoveRowAt(int row)
         {
-            // TODO: Remove last col
+            foreach(Cell cell in GetRow(row))
+                cells.Remove(cell);
         }
-        public void RemoveColumn(int col)
+
+        public void RemoveLastColumn()
         {
-            // TODO: Remove col at index
+            RemoveColumnAt(width-1);
+        }
+
+        public void RemoveColumnAt(int col)
+        {
+            foreach (Cell cell in GetColumn(col))
+                cells.Remove(cell);
+        }
+
+        public List<Cell> GetRow (int row)
+        {
+            List<Cell> cellsInRow = new List<Cell>();
+
+            foreach (Cell cell in cells)
+                if (cell.CompareRow(row))
+                    cellsInRow.Add(cell);
+
+            return cellsInRow;
+        }
+
+        public List<Cell> GetColumn (int col)
+        {
+            List<Cell> cellsInColumn = new List<Cell>();
+
+            foreach (Cell cell in cells)
+                if (cell.CompareColumn(col))
+                    cellsInColumn.Add(cell);
+
+            return cellsInColumn;
         }
 
         // Static Class Features
@@ -206,6 +240,4 @@ namespace Beardiegames.GoogleSheetsInegration
             return null;
         }
     }
-
-    
 }

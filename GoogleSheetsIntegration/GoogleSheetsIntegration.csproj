@@ -7,8 +7,8 @@
     <ProjectGuid>{C3199821-727E-4293-9D1E-D4678D6BCF19}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>GoogleSheetsInegration</RootNamespace>
-    <AssemblyName>GoogleSheetsInegration</AssemblyName>
+    <RootNamespace>GoogleSheetsIntegration</RootNamespace>
+    <AssemblyName>GoogleSheetsIntegration</AssemblyName>
     <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
   </PropertyGroup>
