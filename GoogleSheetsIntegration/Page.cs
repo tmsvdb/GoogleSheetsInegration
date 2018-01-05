@@ -6,157 +6,72 @@ using System.Threading.Tasks;
 
 namespace Beardiegames.GoogleSheetsIntegration
 {
-    public class Cell
+    public class PageRange
     {
-        // properties
-        CellID id;
-        string val;
+        string title;
+        int from_row;
+        int from_col;
+        int to_row;
+        int to_col;
 
-        // Cell information
-        public CellID Id { get { return id; } }
-        public string Value { get { return val; } set { val = value; } }
+        public string peekTitle { get { return title; } }
+        public int peekStartRow { get { return from_row; } }
+        public int peekStartColumn { get { return from_col; } }
+        public int peekEndRow { get { return to_row; } }
+        public int peekEndColumn { get { return to_col; } }
 
-        // public class methodes
-
-        public Cell(CellID id, string value)
+        public PageRange(string title, int from_row, int from_col, int to_row, int to_col)
         {
-            this.id = id;
-            this.val = value;
-        }
-
-        public bool Compare(int row, int col)
-        {
-            return (id.colIndex == col && id.rowIndex == row);
-        }
-        public bool Compare(string idString)
-        {
-            return (id.ToStringFormat() == idString);
-        }
-        public bool CompareColumn(int col)
-        {
-            return id.colIndex == col;
-        }
-        public bool CompareRow(int row)
-        {
-            return id.rowIndex == row;
+            this.title = title;
+            this.from_row = from_row;
+            this.from_col = from_col;
+            this.to_row = to_row;
+            this.to_col = to_col;
         }
 
-        public void MoveUp()
+        public string ToRangeString()
         {
-            Console.WriteLine("Move cell UP from " + id.ToStringFormat() + " to " + new CellID(id.rowIndex - 1, id.colIndex).ToStringFormat());
-            id = new CellID(id.rowIndex - 1, id.colIndex);
+            string format = string.Format(
+                "{0}!{1}:{2}",
+                title,
+                new CellID(from_row, from_col).ToStringFormat(),
+                new CellID(to_row, to_col).ToStringFormat()
+                );
+
+            return format;
         }
-        public void MoveDown()
+
+        public static PageRange EmptyRange()
         {
-            Console.WriteLine("Move cell DOWN from " + id.ToStringFormat() + " to " + new CellID(id.rowIndex + 1, id.colIndex).ToStringFormat());
-            id = new CellID(id.rowIndex + 1, id.colIndex);
-        }
-        public void MoveLeft()
-        {
-            Console.WriteLine("Move cell LEFT from " + id.ToStringFormat() + " to " + new CellID(id.rowIndex, id.colIndex - 1).ToStringFormat());
-            id = new CellID(id.rowIndex, id.colIndex - 1);
-        }
-        public void MoveRight()
-        {
-            Console.WriteLine("Move cell RIGHT from " + id.ToStringFormat() + " to " + new CellID(id.rowIndex, id.colIndex + 1).ToStringFormat());
-            id = new CellID(id.rowIndex, id.colIndex + 1);
+            return new PageRange("", 0, 0, 0, 0);
         }
     }
 
-    public class CellID 
-    {
-        // properties
-        int row;
-        int col;
-
-        // class information
-        public int rowIndex { get { return row; } }
-        public int colIndex { get { return col; } }
-
-        // public class methodes
-
-        public CellID (int row, int col)
-        {
-            this.row = row;
-            this.col = col;
-        }
-
-        public string ToStringFormat()
-        {
-            return NumberToColumn(col+1) + (row+1).ToString();
-        }
-
-        // Static Class Features
-
-        public static CellID FromStringFormat(string str)
-        {
-            string s_row = "";
-            string s_col = "";
-
-            for (int i = 0; i < str.Length; i++)
-            {
-                if (Char.IsNumber(str[i]))
-                    s_row += str[i];
-                else
-                    s_col += str[i];
-            }
-
-            int col = ColumnToNumber(s_col);
-            int row = int.Parse(s_row);
-
-            return new CellID(row, col);
-        }
-
-        public static int ColumnToNumber(string name)
-        {
-            int number = 0;
-            int pow = 1;
-            for (int i = name.Length - 1; i >= 0; i--)
-            {
-                number += (name[i] - 'A' + 1) * pow;
-                pow *= 26;
-            }
-
-            return number;
-        }
-
-        public static string NumberToColumn(int number)
-        {
-            string output = "";
-
-            while (number > -1)
-            {
-                int temp = (number-1) % 26;
-
-                output = Convert.ToChar(temp + 65) + output;
-
-                if (number > 26) number = ((number-1) / 26);
-                else break;
-            }
-
-            return output;
-        }
-    }
-
-    public class Matrix
+    public class Page
     {
         // properties
         List<Cell> cells;
-        int width, height;
+        int width, height, startRow, startCol;
+        string title;
 
         // public class info
+        public string peekTitle { get { return title; } }
         public int numberOfCells { get { return cells.Count; } }
         public int peekWidth { get { return width; } }
         public int peekHeight { get { return height; } }
+        public List<Cell> peekCells { get { return cells; } }
 
         // Public Methodes
 
-        public Matrix (int width, int height)
+        public Page (string title, int width, int height, int startRow = 0, int startCol = 0)
         {
             cells = new List<Cell>();
 
+            this.title = title;
             this.width = width;
             this.height = height;
+            this.startRow = startRow;
+            this.startCol = startCol;
 
             for (int row = 0; row < height; row++)
                 for (int col = 0; col < width; col++)
@@ -265,16 +180,45 @@ namespace Beardiegames.GoogleSheetsIntegration
             return cellsInColumn;
         }
 
-        // Static Class Features
-
-        public static Matrix FromObjectList()
+        public PageRange ToPageRange()
         {
-            return new Matrix(0, 0);
+            return new PageRange(title, startRow, startCol, startRow + height - 1, startCol + width - 1);
         }
 
-        public static IList<IList<object>> ToObjectList()
+        // Static Class Features
+
+        public static Page FromObjectList(string pageTitle, IList<IList<Object>> objList)
         {
-            return null;
+            if (objList == null)
+                throw new Exception("param objList = NULL!");
+
+            if (objList.Count == 0 || objList[0].Count == 0)
+                return new Page(pageTitle, 0, 0);
+
+            Page mtx = new Page(pageTitle, objList[0].Count, objList.Count);
+
+            for (int row = 0; row < objList.Count; row++)
+                for (int col = 0; col < objList[0].Count; col++)
+                    mtx.SetValue(row, col, objList[row][col].ToString());
+
+            return mtx;
+        }
+
+        public static IList<IList<Object>> ToObjectList(Page mtx)
+        {
+            IList<IList<Object>> objList = new List<IList<Object>>();
+            for (int row = 0; row < mtx.peekHeight; row++)
+            {
+                IList<Object> colList = new List<Object>();
+                for (int col = 0; col < mtx.peekWidth; col++)
+                    colList.Add(null);
+                objList.Add(colList);
+            }
+
+            foreach (Cell cell in mtx.peekCells)
+                objList[cell.Id.rowIndex][cell.Id.colIndex] = cell.Value;
+
+            return objList;
         }
 
         // Private implementation

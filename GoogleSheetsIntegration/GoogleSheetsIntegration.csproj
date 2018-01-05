@@ -75,11 +75,12 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Matrix.cs" />
-    <Compile Include="Sheet.cs" />
+    <Compile Include="Cell.cs" />
+    <Compile Include="Page.cs" />
+    <Compile Include="Document.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="SheetManager.cs" />
-    <Compile Include="SheetService.cs" />
+    <Compile Include="DocumentManager.cs" />
+    <Compile Include="APIService.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="app.config" />

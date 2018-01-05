@@ -16,12 +16,12 @@ using Beardiegames.GoogleSheetsIntegration;
 namespace Beardiegames.GoogleSheetsIntegration.Tests
 {
     [TestClass()]
-    public class SheetServiceTests
+    public class APIServiceTests
     {
         [TestMethod()]
         public void RunTest()
         {
-            SheetService service = new SheetService();
+            APIService service = new APIService();
             Assert.IsNull(service.peekCredential);
             Assert.IsNull(service.peekRunningService);
 
@@ -36,7 +36,7 @@ namespace Beardiegames.GoogleSheetsIntegration.Tests
         [TestMethod()]
         public void ResourceTest()
         {
-            SheetService service = new SheetService();
+            APIService service = new APIService();
 
             service.Run("client_id.json", "SheetServiceTest ResourceTest");
             Assert.IsNotNull(service.peekCredential);

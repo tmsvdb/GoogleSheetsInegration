@@ -22,16 +22,19 @@ namespace Beardiegames.GoogleSheetsIntegration.Tests
         [TestMethod()]
         public void ToStringFormatTest()
         {
-            CellID cid1 = new CellID(3, 3);
+            for (int i = 475200; i < 475300; i++)
+                Console.WriteLine(CellID.NumberToColumn(i));
+
+            CellID cid1 = new CellID(2, 2);
             Assert.AreEqual<string>("C3", cid1.ToStringFormat());
 
-            CellID cid2 = new CellID(12, 3);
+            CellID cid2 = new CellID(11, 2);
             Assert.AreEqual<string>("C12", cid2.ToStringFormat());
 
-            CellID cid3 = new CellID(3, 28);
+            CellID cid3 = new CellID(2, 27);
             Assert.AreEqual<string>("AB3", cid3.ToStringFormat());
 
-            CellID cid4 = new CellID(12, 28);
+            CellID cid4 = new CellID(11, 27);
             Assert.AreEqual<string>("AB12", cid4.ToStringFormat());
         }
 

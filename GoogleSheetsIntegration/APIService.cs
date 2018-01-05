@@ -18,7 +18,7 @@ using Google.Apis.Util.Store;
 
 namespace Beardiegames.GoogleSheetsIntegration
 {
-    public class SheetService
+    public class APIService
     {
         // Properties
         static string[] Scopes = { SheetsService.Scope.Spreadsheets };

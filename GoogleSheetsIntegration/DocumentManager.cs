@@ -18,44 +18,44 @@ using Google.Apis.Util.Store;
 
 namespace Beardiegames.GoogleSheetsIntegration
 {
-    public class SheetManager
+    public class DocumentManager
     {
         // Properties
-        List<Sheet> sheets;
-        SheetService runningService;
+        List<Document> documents;
+        APIService runningService;
 
         // Class Information
-        public int numberOfSheets { get { return sheets.Count; } }
+        public int numberOfDocuments { get { return documents.Count; } }
         public bool isRunning { get { return runningService != null; } }
 
         // Public methodes
 
-        public SheetManager(string cliend_id_location, string application_name)
+        public DocumentManager(string cliend_id_location, string application_name)
         {
-            runningService = new SheetService();
+            runningService = new APIService();
             runningService.Run(cliend_id_location, application_name);
-            sheets = new List<Sheet>();
+            documents = new List<Document>();
         }
 
-        public Sheet GetSheet(string spreadsheetId)
+        public Document GetSheet(string spreadsheetId)
         {
-            Sheet sheet = Lookup(spreadsheetId);
-            if (sheet == null)
+            Document doc = Lookup(spreadsheetId);
+            if (doc == null)
             {
-                sheet = new Sheet(runningService.Resource(), spreadsheetId);
-                sheets.Add(sheet);
+                doc = new Document(runningService.Resource(), spreadsheetId);
+                documents.Add(doc);
             }
 
-            return sheet;
+            return doc;
         }
 
         // Local implementation
 
-        private Sheet Lookup(string spreadsheetId)
+        private Document Lookup(string spreadsheetId)
         {
-            foreach (Sheet sheet in sheets)
-                if (sheet.Id == spreadsheetId)
-                    return sheet;
+            foreach (Document doc in documents)
+                if (doc.Id == spreadsheetId)
+                    return doc;
 
             return null;
         }
