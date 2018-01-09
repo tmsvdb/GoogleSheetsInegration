@@ -37,16 +37,51 @@ namespace Beardiegames.GoogleSheetsIntegration
             documents = new List<Document>();
         }
 
-        public Document GetSheet(string spreadsheetId)
+        public Document CreateNewDocument(string documentTitle)
+        {
+            Document doc = Document.CreateNewDocument(runningService.Resource(), documentTitle);
+            if (doc != null)
+            {
+                doc.ReadSpreadsheet();
+                documents.Add(doc);
+            }
+            return doc;
+        }
+
+        public Document LoadDocument(string spreadsheetId)
         {
             Document doc = Lookup(spreadsheetId);
             if (doc == null)
             {
                 doc = new Document(runningService.Resource(), spreadsheetId);
+                doc.ReadSpreadsheet();
                 documents.Add(doc);
             }
 
             return doc;
+        }
+
+        public Document[] GetLoadedDocuments ()
+        {
+            return documents.ToArray();
+        }
+
+        public bool Save(string spreadsheetId)
+        {
+            Document doc = Lookup(spreadsheetId);
+            return Save(doc);
+        }
+        public bool Save(Document doc)
+        {
+            return doc.WriteSpreadsheet();
+        }
+
+        public bool SaveAll ()
+        {
+            foreach (Document doc in documents)
+                if (!Save(doc)) return false;
+
+            return true;
         }
 
         // Local implementation

@@ -12,7 +12,7 @@ namespace Beardiegames.GoogleSheetsIntegration.Tests
     public class CellIDTests
     {
         [TestMethod()]
-        public void CellIDTest()
+        public void CellID_CellIDTest()
         {
             CellID cid = new CellID(12, 28);
             Assert.AreEqual<int>(12, cid.rowIndex, "cid row = " + cid.rowIndex.ToString());
@@ -20,7 +20,7 @@ namespace Beardiegames.GoogleSheetsIntegration.Tests
         }
 
         [TestMethod()]
-        public void ToStringFormatTest()
+        public void CellID_ToStringFormatTest()
         {
             for (int i = 475200; i < 475300; i++)
                 Console.WriteLine(CellID.NumberToColumn(i));
@@ -39,7 +39,7 @@ namespace Beardiegames.GoogleSheetsIntegration.Tests
         }
 
         [TestMethod()]
-        public void FromStringFormatTest()
+        public void CellID_FromStringFormatTest()
         {
             CellID cid1 = CellID.FromStringFormat("C3");
             Assert.AreEqual<int>(3, cid1.rowIndex);
@@ -59,7 +59,7 @@ namespace Beardiegames.GoogleSheetsIntegration.Tests
         }
 
         [TestMethod()]
-        public void ColumnToNumberTest()
+        public void CellID_ColumnToNumberTest()
         {
             Assert.AreEqual<int>(3, CellID.ColumnToNumber("C"));
             Assert.AreEqual<int>(28, CellID.ColumnToNumber("AB"));
@@ -67,7 +67,7 @@ namespace Beardiegames.GoogleSheetsIntegration.Tests
         }
 
         [TestMethod()]
-        public void NumberToColumnTest()
+        public void CellID_NumberToColumnTest()
         {
             Assert.AreEqual<string>("C", CellID.NumberToColumn(3));
             Assert.AreEqual<string>("AB", CellID.NumberToColumn(28));

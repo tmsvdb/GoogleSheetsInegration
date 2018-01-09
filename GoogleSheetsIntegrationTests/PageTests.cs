@@ -12,7 +12,7 @@ namespace Beardiegames.GoogleSheetsIntegration.Tests
     public class PageTests
     {
         [TestMethod()]
-        public void PageTest()
+        public void Page_PageTest()
         {
             Page p = new Page("PageTest", 5, 6);
             Assert.AreEqual<int>(5, p.peekWidth);
@@ -22,7 +22,7 @@ namespace Beardiegames.GoogleSheetsIntegration.Tests
         }
 
         [TestMethod()]
-        public void GetSetValueTest()
+        public void Page_GetSetValueTest()
         {
             Page p1 = new Page("GetSetValueTest_Page1", 5, 6);
             p1.SetValue("C3", "GetValueTest 1");
@@ -42,7 +42,7 @@ namespace Beardiegames.GoogleSheetsIntegration.Tests
         }
 
         [TestMethod()]
-        public void AddRowTest()
+        public void Page_AddRowTest()
         {
             Page p = new Page("AddRowTest_Page", 4, 4);
             Assert.AreEqual<int>(16, p.numberOfCells);
@@ -53,7 +53,7 @@ namespace Beardiegames.GoogleSheetsIntegration.Tests
         }
 
         [TestMethod()]
-        public void AddColumnTest()
+        public void Page_AddColumnTest()
         {
             Page p = new Page("AddColumnTest_Page", 4, 4);
             Assert.AreEqual<int>(16, p.numberOfCells);
@@ -64,7 +64,7 @@ namespace Beardiegames.GoogleSheetsIntegration.Tests
         }
 
         [TestMethod()]
-        public void InsertRowAtTest()
+        public void Page_InsertRowAtTest()
         {
             Page p = new Page("InsertRowAtTest_Page", 2, 2);
             Assert.AreEqual<int>(4, p.numberOfCells);
@@ -85,7 +85,7 @@ namespace Beardiegames.GoogleSheetsIntegration.Tests
         }
 
         [TestMethod()]
-        public void InsertColumnAtTest()
+        public void Page_InsertColumnAtTest()
         {
             Page p = new Page("InsertColumnAtTest_Page", 2, 2);
             Assert.AreEqual<int>(4, p.numberOfCells);
@@ -106,7 +106,7 @@ namespace Beardiegames.GoogleSheetsIntegration.Tests
         }
 
         [TestMethod()]
-        public void RemoveLastRowTest()
+        public void Page_RemoveLastRowTest()
         {
             Page p = new Page("RemoveLastRowTest", 2, 2);
             Assert.AreEqual<int>(4, p.numberOfCells);
@@ -123,7 +123,7 @@ namespace Beardiegames.GoogleSheetsIntegration.Tests
         }
 
         [TestMethod()]
-        public void RemoveRowAtTest()
+        public void Page_RemoveRowAtTest()
         {
             Page p = new Page("RemoveRowAtTest_Page", 2, 3);
             Assert.AreEqual<int>(6, p.numberOfCells);
@@ -146,7 +146,7 @@ namespace Beardiegames.GoogleSheetsIntegration.Tests
         }
 
         [TestMethod()]
-        public void RemoveLastColumnTest()
+        public void Page_RemoveLastColumnTest()
         {
             Page p = new Page("RemoveColumnAtTest", 2, 2);
             Assert.AreEqual<int>(4, p.numberOfCells);
@@ -163,7 +163,7 @@ namespace Beardiegames.GoogleSheetsIntegration.Tests
         }
 
         [TestMethod()]
-        public void RemoveColumnAtTest()
+        public void Page_RemoveColumnAtTest()
         {
             Page p = new Page("RemoveColumnAtTest_Page", 3, 2);
             Assert.AreEqual<int>(6, p.numberOfCells);
@@ -188,7 +188,7 @@ namespace Beardiegames.GoogleSheetsIntegration.Tests
         }
 
         [TestMethod()]
-        public void GetRowTest()
+        public void Page_GetRowTest()
         {
             Page p = new Page("GetRowTest_Page", 2, 3);
             p.SetValue(0, 0, "GetRowTest 0,0");
@@ -215,7 +215,7 @@ namespace Beardiegames.GoogleSheetsIntegration.Tests
         }
 
         [TestMethod()]
-        public void GetColumnTest()
+        public void Page_GetColumnTest()
         {
             Page p = new Page("GetColumnTest_Page", 3, 2);
             Assert.AreEqual<int>(6, p.numberOfCells);
@@ -243,7 +243,7 @@ namespace Beardiegames.GoogleSheetsIntegration.Tests
         }
 
         [TestMethod()]
-        public void FromObjectListTest()
+        public void Page_FromObjectListTest()
         {
             Page p = Page.FromObjectList("FromObjectListTest_Page", sampleObjList());
             Assert.AreEqual<int>(9, p.numberOfCells);
@@ -260,7 +260,7 @@ namespace Beardiegames.GoogleSheetsIntegration.Tests
         }
 
         [TestMethod()]
-        public void ToObjectListTest()
+        public void Page_ToObjectListTest()
         {
             IList<IList<Object>> testSample = sampleObjList();
             Page p = Page.FromObjectList("ToObjectListTest", testSample);

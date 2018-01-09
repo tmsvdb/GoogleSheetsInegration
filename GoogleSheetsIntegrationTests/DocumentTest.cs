@@ -13,24 +13,37 @@ namespace Beardiegames.GoogleSheetsIntegration.Tests
     public class DocumentTests
     {
         [TestMethod()]
-        public void DocumentTest()
+        public void Document_DocumentTest()
         {
             APIService service = new APIService();
             service.Run("client_id.json", "SheetTests ConstructorTest");
-            
+
             Document doc = new Document(service.Resource(), "1E_Um33Mj8oIylVgqUIbiAfw6YH1YlpZy73bCIMWl-dc");
             Assert.AreEqual<string>(doc.Id, "1E_Um33Mj8oIylVgqUIbiAfw6YH1YlpZy73bCIMWl-dc");
             Assert.IsNotNull(doc.lookupResource);
         }
 
         [TestMethod()]
-        public void ReadValuesTest()
+        public void Document_GetPageByTitleTest()
+        {
+            Assert.Fail();
+        }
+
+        [TestMethod()]
+        public void Document_SetPageByTitleTest()
+        {
+            Assert.Fail();
+        }
+
+        [TestMethod()]
+        public void Document_ReadSpreadsheetTest()
         {
             APIService service = new APIService();
             service.Run("client_id.json", "SheetTests ReadValuesTest");
             Document doc = new Document(service.Resource(), "1E_Um33Mj8oIylVgqUIbiAfw6YH1YlpZy73bCIMWl-dc");
 
-            doc.ReadSpreadsheet();
+            if (!doc.ReadSpreadsheet())
+                Assert.Fail();
 
             Assert.AreEqual<int>(doc.numberOfPages, 2);
 
@@ -53,66 +66,54 @@ namespace Beardiegames.GoogleSheetsIntegration.Tests
 
             Assert.AreEqual(p2.GetValue(0, 0), "Hello");
             Assert.AreEqual(p2.GetValue(0, 1), "World");
-
-            //OutputValueList("# Read Values", values);*/
         }
 
         [TestMethod()]
-        public void WriteValuesTest()
+        public void Document_WriteSpreadsheetTest()
         {
             APIService service = new APIService();
             service.Run("client_id.json", "SheetTests ReadValuesTest");
-            Document doc = new Document(service.Resource(), "1E_Um33Mj8oIylVgqUIbiAfw6YH1YlpZy73bCIMWl-dc");
-            
+
+            Document origional_doc = new Document(service.Resource(), "1E_Um33Mj8oIylVgqUIbiAfw6YH1YlpZy73bCIMWl-dc");
+            Document test_doc = new Document(service.Resource(), "1E_Um33Mj8oIylVgqUIbiAfw6YH1YlpZy73bCIMWl-dc");
+
             // get origional values from sheet
-            doc.ReadSpreadsheet();
+            if (!origional_doc.ReadSpreadsheet()) Assert.Fail();
+            if (!test_doc.ReadSpreadsheet()) Assert.Fail();
 
-            IList<IList<object>> ori_values = Page.ToObjectList(doc.GetPageByTitle("TestPage1"));
+            Page p1 = test_doc.GetPageByTitle("TestPage1");
+            p1.SetValue("A5", "Test col A");
+            p1.SetValue("B5", "Test col B");
+            p1.SetValue("C5", "Test col C");
 
-            //OutputValueList("# Origional Values1", ori_values);
-            //OutputValueList("# Origional Values2", Page.ToObjectList(doc.GetPageByTitle("TestPage2")));
+            if (!test_doc.WriteSpreadsheet())
+                Assert.Fail();
 
-            Page p = doc.GetPageByTitle("TestPage1");
-            p.SetValue(4, 0, "Test col A");
-            p.SetValue(4, 1, "Test col B");
-            p.SetValue(4, 2, "Test col C");
+            Page p2 = test_doc.GetPageByTitle("TestPage1");
+            Assert.AreEqual<string>("Test col A", p2.GetValue("A5"));
+            Assert.AreEqual<string>("Test col B", p2.GetValue("B5"));
+            Assert.AreEqual<string>("Test col C", p2.GetValue("C5"));
 
-            IList<IList<object>> write_values = Page.ToObjectList(doc.GetPageByTitle("TestPage1"));
+            if (!origional_doc.WriteSpreadsheet())
+                Assert.Fail();
 
-            //OutputValueList("# Write Values", write_values);
-
-            doc.WriteSpreadsheet();
-
-            IList<IList<object>> response_values = Page.ToObjectList(doc.GetPageByTitle("TestPage1"));
-            Assert.IsNotNull(response_values);
-            //OutputValueList("# Response Values1", response_values);
-            //OutputValueList("# Response Values2", Page.ToObjectList(doc.GetPageByTitle("TestPage2")));
-
-            // loop[ through response values and compare them with the write_values
-            for (int row = 0; row < response_values.Count; row++)
-                for (int col = 0; col < response_values[row].Count; col++)
-                    Assert.AreEqual(write_values[row][col], response_values[row][col]);
-
-
-            doc.SetPageByTitle("TestPage1", Page.FromObjectList("TestPage1", ori_values));
-            doc.WriteSpreadsheet();
-
-            // Test2: reset values to the origional values
-            //OutputValueList("# Reset Values1", Page.ToObjectList(doc.GetPageByTitle("TestPage1")));
-            //OutputValueList("# Reset Values2", Page.ToObjectList(doc.GetPageByTitle("TestPage2")));
+            Page p3 = test_doc.GetPageByTitle("TestPage1");
+            Assert.AreEqual<string>("lastline", p3.GetValue("A5"));
+            Assert.AreEqual<string>("lastid", p3.GetValue("B5"));
+            Assert.AreEqual<string>("laststatus", p3.GetValue("C5"));
         }
 
-        private void OutputValueList (string listname, IList<IList<object>> values)
+        [TestMethod()]
+        public void Document_CreateNewDocumentTest()
         {
-            Console.WriteLine(listname);
+            APIService service = new APIService();
+            service.Run("client_id.json", "Document_CreateNewDocumentTest");
 
-            for (int row = 0; row < values.Count; row++)
-            {
-                string line = "";
-                for (int col = 0; col < values[row].Count; col++)
-                    line += values[row][col] + (col < values[row].Count - 1 ? "," : "");
-                Console.WriteLine(line);
-            }
+            Document doc = Document.CreateNewDocument(service.Resource(), "new test document");
+
+            Assert.IsNotNull(doc);
+            Assert.IsTrue(doc.ReadSpreadsheet());
+            Assert.AreEqual<string>("new test document", doc.peekProperties.Title);
         }
     }
 }

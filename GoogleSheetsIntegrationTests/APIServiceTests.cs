@@ -19,7 +19,7 @@ namespace Beardiegames.GoogleSheetsIntegration.Tests
     public class APIServiceTests
     {
         [TestMethod()]
-        public void RunTest()
+        public void APIService_RunTest()
         {
             APIService service = new APIService();
             Assert.IsNull(service.peekCredential);
@@ -34,7 +34,7 @@ namespace Beardiegames.GoogleSheetsIntegration.Tests
         }
 
         [TestMethod()]
-        public void ResourceTest()
+        public void APIService_ResourceTest()
         {
             APIService service = new APIService();
 

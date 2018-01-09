@@ -4,6 +4,12 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
+using Google.Apis.Auth.OAuth2;
+using Google.Apis.Sheets.v4;
+using Google.Apis.Sheets.v4.Data;
+using Google.Apis.Services;
+using Google.Apis.Util.Store;
+
 namespace Beardiegames.GoogleSheetsIntegration
 {
     public class PageRange
@@ -52,22 +58,23 @@ namespace Beardiegames.GoogleSheetsIntegration
         // properties
         List<Cell> cells;
         int width, height, startRow, startCol;
-        string title;
+        SheetProperties properties;
+        
+        public event EventHandler OnPageEvent;
 
         // public class info
-        public string peekTitle { get { return title; } }
+        public SheetProperties peekProperties { get { return properties; } }
         public int numberOfCells { get { return cells.Count; } }
         public int peekWidth { get { return width; } }
         public int peekHeight { get { return height; } }
         public List<Cell> peekCells { get { return cells; } }
 
         // Public Methodes
-
-        public Page (string title, int width, int height, int startRow = 0, int startCol = 0)
+        public Page (SheetProperties properties, int width, int height, int startRow = 0, int startCol = 0)
         {
             cells = new List<Cell>();
 
-            this.title = title;
+            this.properties = properties;
             this.width = width;
             this.height = height;
             this.startRow = startRow;
@@ -182,20 +189,20 @@ namespace Beardiegames.GoogleSheetsIntegration
 
         public PageRange ToPageRange()
         {
-            return new PageRange(title, startRow, startCol, startRow + height - 1, startCol + width - 1);
+            return new PageRange(properties.Title, startRow, startCol, startRow + height - 1, startCol + width - 1);
         }
 
         // Static Class Features
 
-        public static Page FromObjectList(string pageTitle, IList<IList<Object>> objList)
+        public static Page FromObjectList(SheetProperties pageProperties, IList<IList<Object>> objList)
         {
             if (objList == null)
-                throw new Exception("param objList = NULL!");
+                return new Page(pageProperties, 0, 0);
 
             if (objList.Count == 0 || objList[0].Count == 0)
-                return new Page(pageTitle, 0, 0);
+                return new Page(pageProperties, 0, 0);
 
-            Page mtx = new Page(pageTitle, objList[0].Count, objList.Count);
+            Page mtx = new Page(pageProperties, objList[0].Count, objList.Count);
 
             for (int row = 0; row < objList.Count; row++)
                 for (int col = 0; col < objList[0].Count; col++)

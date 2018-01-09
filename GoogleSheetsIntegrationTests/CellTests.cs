@@ -12,7 +12,7 @@ namespace Beardiegames.GoogleSheetsIntegration.Tests
     public class CellTests
     {
         [TestMethod()]
-        public void CellTest()
+        public void Cell_CellTest()
         {
             CellID cid = new CellID(3, 3);
             Cell cell = new Cell(cid, "CellTest");
@@ -21,28 +21,28 @@ namespace Beardiegames.GoogleSheetsIntegration.Tests
         }
 
         [TestMethod()]
-        public void CompareTest()
+        public void Cell_CompareTest()
         {
             Cell cell = new Cell(new CellID(3, 6), "CompareTest");
             Assert.IsTrue(cell.Compare(3, 6));
         }
 
         [TestMethod()]
-        public void CompareTest1()
+        public void Cell_CompareTest1()
         {
             Cell cell = new Cell(new CellID(3, 6), "CompareTest1");
             Assert.IsTrue(cell.Compare("G4"));
         }
 
         [TestMethod()]
-        public void CompareColumnTest()
+        public void Cell_CompareColumnTest()
         {
             Cell cell = new Cell(new CellID(3, 6), "CompareColumnTest");
             Assert.IsTrue(cell.CompareColumn(6));
         }
 
         [TestMethod()]
-        public void CompareRowTest()
+        public void Cell_CompareRowTest()
         {
             Cell cell = new Cell(new CellID(3, 6), "CompareRowTest");
             Assert.IsTrue(cell.CompareRow(3));

@@ -101,6 +101,7 @@
   <ItemGroup>
     <Compile Include="CellIDTests.cs" />
     <Compile Include="CellTests.cs" />
+    <Compile Include="DocumentTests.cs" />
     <Compile Include="Google\Apis\Sheets\v4\IClientService.cs" />
     <Compile Include="PageTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
